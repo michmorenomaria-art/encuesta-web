@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Encuesta Desarrollo Web</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#ffd6e7;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+/* contenedor general */
+
+.container{
+background:white;
+padding:30px;
+width:450px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+/* barra de resultado */
+
+#barra{
+height:15px;
+background:gray;
+margin-bottom:20px;
+border-radius:10px;
+}
+
+/* botones */
+
+button{
+display:block;
+width:100%;
+margin:10px 0;
+padding:12px;
+font-size:16px;
+border:none;
+border-radius:6px;
+background:#ff8fb1;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff6f9f;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:8px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+#login-error{
+color:red;
+display:none;
+}
+
+#correcta{
+margin-top:15px;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="container" id="login-container">
+
+<h2>Iniciar sesión</h2>
+
+<form id="login-form">
+
+<input type="text" id="username" placeholder="Usuario" required>
+
+<input type="password" id="password" placeholder="Contraseña" required>
+
+<button type="submit">Entrar</button>
+
+<p id="login-error">Usuario o contraseña incorrectos</p>
+
+</form>
+
+</div>
+
+
+<!-- ENCUESTA -->
+
+<div class="container" id="hello-container" style="display:none;">
+
+<div id="barra"></div>
+
+<h2 id="pregunta"></h2>
+
+<div id="opciones"></div>
+
+<p id="correcta"></p>
+
+</div>
+
+
+<script>
+
+/* LOGIN */
+
+const USER = "admin";
+const PASS = "1234";
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const loginForm = document.getElementById("login-form");
+const loginError = document.getElementById("login-error");
+const loginContainer = document.getElementById("login-container");
+const helloContainer = document.getElementById("hello-container");
+
+loginForm.addEventListener("submit", function(e){
+
+e.preventDefault();
+
+const username = document.getElementById("username").value;
+const password = document.getElementById("password").value;
+
+if(username === USER && password === PASS){
+
+loginContainer.style.display = "none";
+helloContainer.style.display = "block";
+
+mostrarPregunta();
+
+}else{
+
+loginError.style.display = "block";
+
+}
+
+});
+
+});
+
+
+/* ENCUESTA */
+
+let preguntas = [
+
+{
+pregunta:"¿Qué es el desarrollo web?",
+opciones:[
+"Crear sitios y aplicaciones para internet",
+"Arreglar computadoras",
+"Diseñar videojuegos"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué lenguaje estructura páginas web?",
+opciones:["HTML","Python","Java"],
+correcta:0
+},
+
+{
+pregunta:"¿Para qué sirve CSS?",
+opciones:[
+"Dar estilo a la página",
+"Guardar datos",
+"Crear bases de datos"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué lenguaje hace páginas interactivas?",
+opciones:["JavaScript","Word","Excel"],
+correcta:0
+},
+
+{
+pregunta:"¿Qué es un navegador web?",
+opciones:[
+"Programa para ver páginas web",
+"Lenguaje de programación",
+"Servidor"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué significa URL?",
+opciones:[
+"Dirección de una página web",
+"Tipo de computadora",
+"Lenguaje de programación"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué es un servidor?",
+opciones:[
+"Computadora que guarda páginas web",
+"Programa de música",
+"Aplicación de dibujo"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué es frontend?",
+opciones:[
+"Parte visual que ve el usuario",
+"Base de datos",
+"Sistema operativo"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué es backend?",
+opciones:[
+"Parte interna que maneja datos",
+"Diseño visual",
+"Editor de texto"
+],
+correcta:0
+},
+
+{
+pregunta:"¿Qué se usa para crear sitios web?",
+opciones:[
+"HTML CSS y JavaScript",
+"Word y Excel",
+"Paint y PowerPoint"
+],
+correcta:0
+}
+
+];
+
+let indice = 0;
+let puntos = 0;
+
+function mostrarPregunta(){
+
+let p = preguntas[indice];
+
+document.getElementById("pregunta").innerText = p.pregunta;
+
+let opcionesHTML = "";
+
+p.opciones.forEach((opcion,i)=>{
+opcionesHTML += `<button onclick="verificar(${i})">${opcion}</button>`;
+});
+
+document.getElementById("opciones").innerHTML = opcionesHTML;
+
+document.getElementById("correcta").innerText = "";
+
+document.getElementById("barra").style.background="gray";
+
+}
+
+
+function verificar(respuesta){
+
+let correcta = preguntas[indice].correcta;
+
+if(respuesta === correcta){
+
+document.getElementById("barra").style.background="green";
+puntos++;
+
+}else{
+
+document.getElementById("barra").style.background="red";
+
+document.getElementById("correcta").innerText =
+"Respuesta correcta: " + preguntas[indice].opciones[correcta];
+
+}
+
+indice++;
+
+setTimeout(()=>{
+
+if(indice < preguntas.length){
+
+mostrarPregunta();
+
+}else{
+
+document.querySelector("#hello-container").innerHTML =
+"<h2>Encuesta terminada</h2><p>Puntuación: "+puntos+"/10</p>";
+
+}
+
+},1000);
+
+}
+
+
+<a href="https://tupagina.github.io/encuesta.html">
+<button>Abrir encuesta en celular 📱</button>
+</a>
+
+</script>
+
+</body>
+</html>
